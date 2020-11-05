@@ -17,15 +17,27 @@ suite('Functional Tests', () => {
     Translator = require('../public/translator.js');
   });
 
-  suite('Function ____()', () => {
+  suite('Function translate()', () => {
     /* 
       The translated sentence is appended to the `translated-sentence` `div`
       and the translated words or terms are wrapped in 
       `<span class="highlight">...</span>` tags when the "Translate" button is pressed.
     */
     test("Translation appended to the `translated-sentence` `div`", done => {
+      const sentenceInput = document.getElementById('text-input');
+      const localeInput = document.getElementById('locale-select');
+      const translationDiv = document.getElementById('translated-sentence');
+      const errorDiv = document.getElementById('error-msg');
+      sentenceInput.value = 'Hello, can you put this aluminum can in the trashcan at 3:30?'
+      localeInput.value = Translator.Locales.us;
 
-      // done();
+      const expected = 'Hello, can you put this <span class="highlight" title="aluminum">aluminium</span> can in the <span class="highlight" title="trashcan">bin</span> at <span class="highlight" title="3:30">3.30</span>?'
+
+      Translator.translate();
+
+      assert.equal(translationDiv.innerHTML, expected);
+      assert.equal(errorDiv.innerHTML, '');
+      done();
     });
 
     /* 
@@ -34,8 +46,20 @@ suite('Functional Tests', () => {
       `translated-sentence` `div` when the "Translate" button is pressed.
     */
     test("'Everything looks good to me!' message appended to the `translated-sentence` `div`", done => {
+      const sentenceInput = document.getElementById('text-input');
+      const localeInput = document.getElementById('locale-select');
+      const translationDiv = document.getElementById('translated-sentence');
+      const errorDiv = document.getElementById('error-msg');
+      sentenceInput.value = 'Hello, how are you?'
+      localeInput.value = Translator.Locales.us;
 
-      // done();
+      const expected = 'Everything looks good to me!'
+
+      Translator.translate();
+
+      assert.equal(translationDiv.innerHTML, expected);
+      assert.equal(errorDiv.innerHTML, '');
+      done();
     });
 
     /* 
@@ -43,21 +67,42 @@ suite('Functional Tests', () => {
       pressed, append the message 'Error: No text to translate.' to 
       the `error-msg` `div`.
     */
-    test("'Error: No text to translate.' message appended to the `translated-sentence` `div`", done => {
+    test("'Error: No text to translate.' message appended to the `error-msg` `div`", done => {
+      const sentenceInput = document.getElementById('text-input');
+      const localeInput = document.getElementById('locale-select');
+      const translationDiv = document.getElementById('translated-sentence');
+      const errorDiv = document.getElementById('error-msg');
+      sentenceInput.value = ''
+      localeInput.value = Translator.Locales.us;
 
-      // done();
+      const expected = 'Error: No text to translate.';
+
+      Translator.translate();
+
+      assert.equal(translationDiv.innerHTML, '');
+      assert.equal(errorDiv.innerHTML, expected);
+      done();;
     });
 
   });
 
-  suite('Function ____()', () => {
+  suite('Function clear()', () => {
     /* 
       The text area and both the `translated-sentence` and `error-msg`
       `divs` are cleared when the "Clear" button is pressed.
     */
     test("Text area, `translated-sentence`, and `error-msg` are cleared", done => {
-
-      // done();
+      const sentenceInput = document.getElementById('text-input');
+      const translationDiv = document.getElementById('translated-sentence');
+      const errorDiv = document.getElementById('error-msg');
+      sentenceInput.value = 'A sentence.';
+      translationDiv.innerHTML = 'Something Translated.';
+      errorDiv.innerHTML = 'An Error';
+      Translator.clear();
+      assert.equal(sentenceInput.value, '');
+      assert.equal(translationDiv.innerHTML, '');
+      assert.equal(errorDiv.innerHTML, '');
+      done();
     });
 
   });
